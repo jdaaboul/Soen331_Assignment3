@@ -112,18 +112,20 @@ all_init_states(L):-  findall(State, initial_state(State,_), L).
 
 get_starting_state(State):- initial_state(State, null).
 
+state_is_reflexive(State):- transition(State,_,Event,Guard,_), is_loop(Event, Guard). 
+
+graph_is_reflexive:- forall(state(State),state_is_reflexive(State)).
+
 get_guards(Ret) :- findall(Guard,(transition(_,_,_,Guard,_),Guard \= null),L), list_to_set(L,Ret).
 
 get_events(Ret) :- findall(Event,(transition(_,_,Event,_,_), Event \= null),L),list_to_set(L,Ret).
 
 get_actions(Ret) :- findall(Action,(transition(_,_,_,_,Action), Action \= null),L),list_to_set(L,Ret).
 
-
 get_only_guarded(Ret) :- findall([Source,Destination],(transition(Source,Destination,null,Guard,null), Guard \= null),Ret).
 
 legal_events_of(State, L):- findall([Event, Guard], (transition(State,_, Event, Guard, _), is_edge(Event, Guard)), L).
 
-state_is_reflexive(State):- transition(State,_,Event,Guard,_), is_loop(Event, Guard). 
 
 
 
